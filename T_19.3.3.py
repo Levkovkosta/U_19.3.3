@@ -1,7 +1,7 @@
 import requests
 import json
 
-# data
+# начальные данные для создания, изменения и удаления пета
 pet_id=55555
 
 input_pet = {
@@ -40,26 +40,21 @@ input_pet_to_update = {
     ],
     "status": "available"
 }
-
+# заголовки передаваемые в запросе
 header = {'accept': 'application/json', 'Content-Type': 'application/json'}
-# post
+# делаем post запрос
 res_post = requests.post(url='https://petstore.swagger.io/v2/pet', data=json.dumps(input_pet), headers=header)
 print(res_post.text)
 
-# get
+# делаем get запрос
 res_get = requests.get(url=f'https://petstore.swagger.io/v2/pet/{input_pet["id"]}')
 print(res_get.text)
 
-# put
+# делаем put запрос
 res_put = requests.put(url='https://petstore.swagger.io/v2/pet/',data=json.dumps(input_pet_to_update), headers=header)
 print(res_put.text)
 
-# check put
-# res_get = requests.get(url=f'https://petstore.swagger.io/v2/pet/{input_pet["id"]}')
-# print(res_get.text)
-# delete
+# делаем delete запрос
 res_delete = requests.delete(url=f'https://petstore.swagger.io/v2/pet/{input_pet["id"]}')
+print(res_delete.text)
 
-# check delete
-# res_get = requests.get(url=f'https://petstore.swagger.io/v2/pet/{input_pet["id"]}')
-# print(res_get.text)
