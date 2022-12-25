@@ -1,6 +1,5 @@
 import requests
 import json
-
 # начальные данные для создания, изменения и удаления пета
 pet_id=55555
 
@@ -20,7 +19,7 @@ input_pet = {
             "name": "Dog"
         }
     ],
-    "status": "available"
+    "status": "pending"
 }
 input_pet_to_update = {
     "id": pet_id,
@@ -42,19 +41,56 @@ input_pet_to_update = {
 }
 # заголовки передаваемые в запросе
 header = {'accept': 'application/json', 'Content-Type': 'application/json'}
-# делаем post запрос
-res_post = requests.post(url='https://petstore.swagger.io/v2/pet', data=json.dumps(input_pet), headers=header)
-print(res_post.text)
 
+# делаем post запрос
+res = requests.post(url='https://petstore.swagger.io/v2/pet', data=json.dumps(input_pet), headers=header)
+print('post запрос создаем пета ')
+print('  Статус запроса:', res.status_code)
+print('  Ответ сервера :', res.json(), '\n')
+
+# post запрос по статусу 'pending'
+status = 'pending'
+res = requests.get(f'https://petstore.swagger.io/v2/pet/findByStatus?status={status}', headers={'accept': 'application/json'})
+print('поиск по статутсу ')
+print('  Статус запроса:', res.status_code)
+print('  Ответ сервера :', res.json(), '\n')
 # делаем get запрос
-res_get = requests.get(url=f'https://petstore.swagger.io/v2/pet/{input_pet["id"]}')
-print(res_get.text)
+res = requests.get(url=f'https://petstore.swagger.io/v2/pet/{input_pet["id"]}')
+print('поиск по ID ')
+print('  Статус запроса:', res.status_code)
+print('  Ответ сервера :', res.json(), '\n')
 
 # делаем put запрос
-res_put = requests.put(url='https://petstore.swagger.io/v2/pet/',data=json.dumps(input_pet_to_update), headers=header)
-print(res_put.text)
+res = requests.put(url='https://petstore.swagger.io/v2/pet/',data=json.dumps(input_pet_to_update), headers=header)
+print('обновление информации ')
+print('  Статус запроса:', res.status_code)
+print('  Ответ сервера :', res.json(), '\n')
+
+# загрузка фото по ID ( не работает)
+image = 'cat.jpg'
+files = {'file': (image, open(image, 'rb'), 'image/jpeg')}
+res = requests.post(url=f'https://petstore.swagger.io/v2/pet/{input_pet["id"]}', headers={'accept': 'application/json'},
+                    files=files)
+print('загрузка фото по ID ')
+print('  Статус запроса:', res.status_code)
+print('  Ответ сервера body:', res.json(), '\n')
+
+# Post обновление питомца по ID
+header={'accept': 'application/json','Content-Type': 'application/x-www-form-urlencoded'}
+upd_pet ={"id": pet_id,"name": "Vasia","status": "available"}
+
+res = requests.post(url=f'https://petstore.swagger.io/v2/pet/{input_pet["id"]}', headers=header, data=json.dumps(upd_pet))
+
+print('Post обновление питомца по ID')
+print('  Статус запроса:', res.status_code)
+print('  Ответ сервера body:', res.json(), '\n')
 
 # делаем delete запрос
-res_delete = requests.delete(url=f'https://petstore.swagger.io/v2/pet/{input_pet["id"]}')
-print(res_delete.text)
+res = requests.delete(url=f'https://petstore.swagger.io/v2/pet/{input_pet["id"]}')
+print('delete запрос ')
+print('  Статус запроса:', res.status_code)
+print('  Ответ сервера :', res.json(), '\n')
+
+
+
 
