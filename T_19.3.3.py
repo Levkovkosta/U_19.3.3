@@ -1,6 +1,8 @@
 import requests
 import json
+from requests_toolbelt.multipart.encoder import MultipartEncoder
 # начальные данные для создания, изменения и удаления пета
+
 pet_id=55555
 
 input_pet = {
@@ -66,11 +68,11 @@ print('обновление информации ')
 print('  Статус запроса:', res.status_code)
 print('  Ответ сервера :', res.json(), '\n')
 
-# загрузка фото по ID ( не работает)
+# загрузка фото по ID
 image = 'cat.jpg'
-files = {'file': (image, open(image, 'rb'), 'image/jpeg')}
-res = requests.post(url=f'https://petstore.swagger.io/v2/pet/{input_pet["id"]}', headers={'accept': 'application/json'},
-                    files=files)
+files = MultipartEncoder(fields = {'file': (image, open(image, 'rb'), 'image/jpeg')})
+header = {'accept': 'application/json', 'Content-Type': files.content_type}
+res = requests.post(url=f'https://petstore.swagger.io/v2/pet/{input_pet["id"]}', headers=header, data=files)
 print('загрузка фото по ID ')
 print('  Статус запроса:', res.status_code)
 print('  Ответ сервера body:', res.json(), '\n')
